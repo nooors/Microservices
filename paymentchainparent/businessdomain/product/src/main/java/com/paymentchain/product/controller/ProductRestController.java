@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/springframework/RestController.java to edit this template
  */
-package com.paymentchain.customer.controller;
+package com.paymentchain.product.controller;
 
-import com.paymentchain.customer.entities.Customer;
-import com.paymentchain.customer.repository.CustomerRepository;
+import com.paymentchain.product.entities.Product;
+import com.paymentchain.product.repository.ProductRepository;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
@@ -23,31 +23,31 @@ import org.springframework.web.bind.annotation.PutMapping;
  * @author nooor
  */
 @RestController
-@RequestMapping("/customer")
-public class CustomerRestController {
+@RequestMapping("/product")
+public class ProductRestController {
     
     @Autowired
-    CustomerRepository customerRepository;
+    ProductRepository productRepository;
     
     
     @GetMapping()
-    public List<Customer> findAll() {
-        return customerRepository.findAll();
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
     
     @GetMapping("/{id}")
-    public Customer get(@PathVariable String id) {
+    public Product get(@PathVariable String id) {
         return null;
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody Customer input) {
+    public ResponseEntity<?> put(@PathVariable String id, @RequestBody Product input) {
         return null;
     }
     
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody Customer input) {
-        Customer save = customerRepository.save(input);
+    public ResponseEntity<?> post(@RequestBody Product input) {
+        Product save = productRepository.save(input);
         return ResponseEntity.ok(save);
     }
     
