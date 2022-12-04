@@ -9,6 +9,7 @@ import com.paymentchain.customer.repository.CustomerRepository;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,24 +37,30 @@ public class CustomerRestController {
     }
     
     @GetMapping("/{id}")
-    public Customer get(@PathVariable String id) {
-        return null;
+    public Customer get(@PathVariable long id) {
+        return customerRepository.findById(id).get();
     }
     
     @PutMapping("/{id}")
     public ResponseEntity<?> put(@PathVariable String id, @RequestBody Customer input) {
-        return null;
+        Customer save = customerRepository.save(input);
+        return ResponseEntity.ok(save);
     }
     
     @PostMapping
     public ResponseEntity<?> post(@RequestBody Customer input) {
+        input.getProducts().forEach(product -> product.setCustomer(input));
         Customer save = customerRepository.save(input);
         return ResponseEntity.ok(save);
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable String id) {
-        return null;
+    public ResponseEntity<?> delete(@PathVariable long id) {
+        Optional<Customer> findById = customerRepository.findById(id);
+        if(findById.get() != null){
+            customerRepository.delete(findById.get());
+        }
+        return ResponseEntity.ok().build();
     }
     
 }
