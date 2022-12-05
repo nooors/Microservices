@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.paymentchain.customer.entities;
+package com.paymentchain.transaction.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
@@ -31,7 +31,7 @@ public class CustomerProduct {
     private String productName;
 
     @JsonIgnore // it is necessary to avoid infinite recursion
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Customer.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Transaction.class)
     @JoinColumn(name = "customerId", nullable = true)
-    private Customer customer;
+    private Transaction customer;
 }
