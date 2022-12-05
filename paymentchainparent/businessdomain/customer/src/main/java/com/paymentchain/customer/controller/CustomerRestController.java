@@ -43,16 +43,16 @@ import reactor.netty.http.client.HttpClient;
 @RestController
 @RequestMapping("/customer")
 public class CustomerRestController {
-    
+
     @Autowired
     CustomerRepository customerRepository;
-    
+
     private final WebClient.Builder webClientBuilder;
-    
-    public CustomerRestController(WebClient.Builder webClientBuilder){
+
+    public CustomerRestController(WebClient.Builder webClientBuilder) {
         this.webClientBuilder = webClientBuilder;
     }
-    
+
     // webClient requieres HttpClient library to work properly
     HttpClient client = HttpClient.create()
             // Connetion Timeout: is a period within whitch a connection between a client an a server must be stablished
@@ -68,41 +68,40 @@ public class CustomerRestController {
                 connection.addHandlerLast(new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS));
                 connection.addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS));
             });
-            
-            
+
     @GetMapping()
     public List<Customer> findAll() {
         return customerRepository.findAll();
     }
-    
+
     @GetMapping("/{id}")
     public Customer get(@PathVariable long id) {
         return customerRepository.findById(id).get();
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<?> put(@PathVariable String id, @RequestBody Customer input) {
         Customer save = customerRepository.save(input);
         return ResponseEntity.ok(save);
     }
-    
+
     @PostMapping
     public ResponseEntity<?> post(@RequestBody Customer input) {
         input.getProducts().forEach(product -> product.setCustomer(input));
         Customer save = customerRepository.save(input);
         return ResponseEntity.ok(save);
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
         Optional<Customer> findById = customerRepository.findById(id);
-        if(findById.get() != null){
+        if (findById.get() != null) {
             customerRepository.delete(findById.get());
         }
         return ResponseEntity.ok().build();
     }
-    
-       @GetMapping("/full}")
+
+    @GetMapping("/full}")
     public Customer getByCod(@RequestPart String code) {
         Customer customer = customerRepository.findByCode(code);
         List<CustomerProduct> products = customer.getProducts();
@@ -110,19 +109,20 @@ public class CustomerRestController {
             String productName = getProductName(product.getId());
             product.setProductName(productName);
         });
-        
+
         return customer;
+        
     }
-    
-   private String getProductName(long id){
-       WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
-               .baseUrl("http://localhost:8083/product")
-               .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-               .defaultUriVariables(Collections.singletonMap("uri", "http://localhost:8083/product"))
-               .build();
-       JsonNode block = build.method(HttpMethod.GET).uri("/" + id)
-               .retrieve().bodyToMono(JsonNode.class).block();
-       String name = block.get("name").asText();
-       return name;
-   }
+
+    private String getProductName(long id) {
+        WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
+                .baseUrl("http://localhost:8083/product")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultUriVariables(Collections.singletonMap("uri", "http://localhost:8083/product"))
+                .build();
+        JsonNode block = build.method(HttpMethod.GET).uri("/" + id)
+                .retrieve().bodyToMono(JsonNode.class).block();
+        String name = block.get("name").asText();
+        return name;
+    }
 }
