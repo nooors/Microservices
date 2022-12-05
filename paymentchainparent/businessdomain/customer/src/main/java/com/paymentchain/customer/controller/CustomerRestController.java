@@ -6,6 +6,7 @@ package com.paymentchain.customer.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.paymentchain.customer.entities.Customer;
+import com.paymentchain.customer.entities.CustomerProduct;
 import com.paymentchain.customer.repository.CustomerRepository;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.epoll.EpollChannelOption;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
@@ -98,6 +100,18 @@ public class CustomerRestController {
             customerRepository.delete(findById.get());
         }
         return ResponseEntity.ok().build();
+    }
+    
+       @GetMapping("/full}")
+    public Customer getByCod(@RequestPart String code) {
+        Customer customer = customerRepository.findByCode(code);
+        List<CustomerProduct> products = customer.getProducts();
+        products.forEach(product -> {
+            String productName = getProductName(product.getId());
+            product.setProductName(productName);
+        });
+        
+        return customer;
     }
     
    private String getProductName(long id){
