@@ -13,13 +13,13 @@ import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import java.time.Duration;
-import java.util.Collections;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -32,7 +32,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
@@ -101,8 +102,8 @@ public class CustomerRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/full}")
-    public Customer getByCod(@RequestPart String code) {
+    @GetMapping("/full")
+    public Customer getByCod(@RequestParam String code) {
         Customer customer = customerRepository.findByCode(code);
         List<CustomerProduct> products = customer.getProducts();
         products.forEach(product -> {
@@ -111,7 +112,7 @@ public class CustomerRestController {
         });
 
         return customer;
-        
+
     }
 
     private String getProductName(long id) {
