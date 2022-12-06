@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/springframework/RestController.java to edit this template
  */
-package com.paymentchain.transaction.controller;
+package com.paymentchain.customer.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.paymentchain.transaction.entities.Transaction;
-import com.paymentchain.transaction.entities.CustomerProduct;
-import com.paymentchain.transaction.repository.CustomerRepository;
+import com.paymentchain.customer.entities.Customer;
+import com.paymentchain.customer.entities.CustomerProduct;
+import com.paymentchain.customer.repository.CustomerRepository;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
@@ -71,31 +71,31 @@ public class CustomerRestController {
             });
 
     @GetMapping()
-    public List<Transaction> findAll() {
+    public List<Customer> findAll() {
         return customerRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Transaction get(@PathVariable long id) {
+    public Customer get(@PathVariable long id) {
         return customerRepository.findById(id).get();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody Transaction input) {
-        Transaction save = customerRepository.save(input);
+    public ResponseEntity<?> put(@PathVariable String id, @RequestBody Customer input) {
+        Customer save = customerRepository.save(input);
         return ResponseEntity.ok(save);
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody Transaction input) {
+    public ResponseEntity<?> post(@RequestBody Customer input) {
         input.getProducts().forEach(product -> product.setCustomer(input));
-        Transaction save = customerRepository.save(input);
+        Customer save = customerRepository.save(input);
         return ResponseEntity.ok(save);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
-        Optional<Transaction> findById = customerRepository.findById(id);
+        Optional<Customer> findById = customerRepository.findById(id);
         if (findById.get() != null) {
             customerRepository.delete(findById.get());
         }
@@ -103,8 +103,8 @@ public class CustomerRestController {
     }
 
     @GetMapping("/full")
-    public Transaction getByCod(@RequestParam String code) {
-        Transaction customer = customerRepository.findByCode(code);
+    public Customer getByCod(@RequestParam String code) {
+        Customer customer = customerRepository.findByCode(code);
         List<CustomerProduct> products = customer.getProducts();
         products.forEach(product -> {
             String productName = getProductName(product.getId());
