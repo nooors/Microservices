@@ -32,7 +32,7 @@ public class ProductRestController {
     
     
     @GetMapping()
-    public List<Product> findAll() {
+    public List<Product> list() {
         return productRepository.findAll();
     }
     
@@ -42,8 +42,13 @@ public class ProductRestController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable String id, @RequestBody Product input) {
-        Product save = productRepository.save(input);
+    public ResponseEntity<?> put(@PathVariable long id, @RequestBody Product input) {
+        Product find = productRepository.findById(id).get();
+        if(find != null){
+            find.setCode(input.getCode());
+            find.setName(input.getName());
+        }
+        Product save = productRepository.save(find);
         return ResponseEntity.ok(save);
     }
     
