@@ -31,7 +31,9 @@ public class CustomerProduct {
     private String productName;
 
     @JsonIgnore // it is necessary to avoid infinite recursion
+    
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Customer.class)
+    
     @JoinColumn(name = "customerId", nullable = true)
     private Customer customer;
 }
