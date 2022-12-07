@@ -103,9 +103,11 @@ public class CustomerRestController {
     }
 
     @GetMapping("/full")
-    public Customer getByCod(@RequestParam String code) {
+    public Customer getByCode(@RequestParam String code) {
         Customer customer = customerRepository.findByCode(code);
+        
         List<CustomerProduct> products = customer.getProducts();
+        
         products.forEach(product -> {
             String productName = getProductName(product.getId());
             product.setProductName(productName);
@@ -116,13 +118,16 @@ public class CustomerRestController {
     }
 
     private String getProductName(long id) {
+
         WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
                 .baseUrl("http://localhost:8083/product")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultUriVariables(Collections.singletonMap("uri", "http://localhost:8083/product"))
                 .build();
+
         JsonNode block = build.method(HttpMethod.GET).uri("/" + id)
                 .retrieve().bodyToMono(JsonNode.class).block();
+
         String name = block.get("name").asText();
         return name;
     }
