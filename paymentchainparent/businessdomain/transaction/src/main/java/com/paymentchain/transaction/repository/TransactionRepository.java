@@ -16,6 +16,6 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-   @Query("SELECT t FROM Transaction t WHERE t.accountIban = ?1")
-   public List<Transaction> findByAccountIban(String accountIban);
+   @Query("SELECT t FROM Transaction t WHERE t.ibanAccount = ?1")
+   public List<Transaction> findByIbanAccount(String ibanAccount);
 }

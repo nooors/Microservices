@@ -43,8 +43,8 @@ public class TransactionController {
     }
 
     @GetMapping("/customer/transactions")
-    public List<Transaction> get(@RequestParam String accountIban) {
-        return transactionRepository.findByAccountIban(accountIban);
+    public List<Transaction> get(@RequestParam String ibanAccount) {
+        return transactionRepository.findByIbanAccount(ibanAccount);
     }
 
     @PutMapping("/{id}")
@@ -56,7 +56,7 @@ public class TransactionController {
             find.setDate(input.getDate());
             find.setDescription(input.getDescription());
             find.setFee(input.getFee());
-            find.setAccountIban(input.getAccountIban());
+            find.setIbanAccount(input.getIbanAccount());
             find.setReference(input.getReference());
             find.setStatus(input.getStatus());
         }

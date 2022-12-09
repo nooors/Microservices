@@ -160,7 +160,7 @@ public class CustomerRestController {
 
         List<?> transactions = build.method(HttpMethod.GET).uri(uriBuilder -> uriBuilder
                 .path("/customer/transactions")
-                .queryParam("accountIban", iban)
+                .queryParam("ibanAccount", iban)
                 .build())
                 .retrieve().bodyToFlux(Object.class).collectList().block();
 

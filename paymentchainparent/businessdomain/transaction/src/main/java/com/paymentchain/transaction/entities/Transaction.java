@@ -22,7 +22,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String reference;
-    private String accountIban;
+    private String ibanAccount;
     private LocalDateTime date;
     private double amount;
     private double fee;
